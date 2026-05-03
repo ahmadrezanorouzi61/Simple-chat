@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Simple Chat</title>
+</head>
+
+<body>
+
+<h2>Chat</h2>
+
+<div id="messages"></div>
+
+<input id="msg">
+<button onclick="send()">Send</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+
+const firebaseConfig = {
+apiKey: "API_KEY",
+authDomain: "PROJECT.firebaseapp.com",
+databaseURL: "https://PROJECT-default-rtdb.firebaseio.com",
+projectId: "PROJECT"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function send(){
+let text=document.getElementById("msg").value;
+
+db.ref("chat").push({
+msg:text
+});
+
+document.getElementById("msg").value="";
+}
+
+db.ref("chat").on("value",(data)=>{
+let msgs=data.val();
+let html="";
+
+for(let id in msgs){
+html+= "<p>"+msgs[id].msg+"</p>";
+}
+
+document.getElementById("messages").innerHTML=html;
+
+});
+
+</script>
+
+</body>
+</html>
